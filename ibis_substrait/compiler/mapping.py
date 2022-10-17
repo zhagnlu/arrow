@@ -60,7 +60,6 @@ IBIS_SUBSTRAIT_OP_MAPPING = {
     "Sqrt": "sqrt",
     "StartsWith": "starts_with",
     "StringConcat": "concat",
-    "StringContains": "contains",
     "StringLength": "char_length",
     "StringReplace": "replace",
     "StringSQLLike": "like",
