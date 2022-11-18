@@ -292,6 +292,19 @@ class ARROW_TESTING_EXPORT RandomArrayGenerator {
   std::shared_ptr<Array> String(int64_t size, int32_t min_length, int32_t max_length,
                                 double null_probability = 0);
 
+  /// \brief Generate a random StringViewArray
+  ///
+  /// \param[in] size the size of the array to generate
+  /// \param[in] min_length the lower bound of the string length
+  ///            determined by the uniform distribution
+  /// \param[in] max_length the upper bound of the string length
+  ///            determined by the uniform distribution
+  /// \param[in] null_probability the probability of a value being null
+  ///
+  /// \return a generated Array
+  std::shared_ptr<Array> StringView(int64_t size, int32_t min_length, int32_t max_length,
+                                    double null_probability = 0);
+
   /// \brief Generate a random LargeStringArray
   ///
   /// \param[in] size the size of the array to generate

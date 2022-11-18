@@ -340,11 +340,10 @@ std::shared_ptr<Array> RandomArrayGenerator::Decimal256(std::shared_ptr<DataType
   return gen.MakeRandomArray(size, null_probability);
 }
 
-template <typename TypeClass>
+template <typename TypeClass, typename offset_type = typename TypeClass::offset_type>
 static std::shared_ptr<Array> GenerateBinaryArray(RandomArrayGenerator* gen, int64_t size,
                                                   int32_t min_length, int32_t max_length,
                                                   double null_probability) {
-  using offset_type = typename TypeClass::offset_type;
   using BuilderType = typename TypeTraits<TypeClass>::BuilderType;
   using OffsetArrowType = typename CTypeTraits<offset_type>::ArrowType;
   using OffsetArrayType = typename TypeTraits<OffsetArrowType>::ArrayType;
@@ -390,6 +389,13 @@ std::shared_ptr<Array> RandomArrayGenerator::LargeString(int64_t size, int32_t m
                                                          double null_probability) {
   return GenerateBinaryArray<LargeStringType>(this, size, min_length, max_length,
                                               null_probability);
+}
+
+std::shared_ptr<Array> RandomArrayGenerator::StringView(int64_t size, int32_t min_length,
+                                                        int32_t max_length,
+                                                        double null_probability) {
+  return GenerateBinaryArray<StringViewType, uint32_t>(this, size, min_length, max_length,
+                                                       null_probability);
 }
 
 std::shared_ptr<Array> RandomArrayGenerator::BinaryWithRepeats(int64_t size,
