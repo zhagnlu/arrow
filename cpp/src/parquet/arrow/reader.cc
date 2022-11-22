@@ -22,6 +22,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 #include "arrow/array.h"
 #include "arrow/buffer.h"
