@@ -98,6 +98,21 @@ namespace {
 
 }  // namespace
 
+static size_t
+getCurrentRSS() {
+    /* Linux ---------------------------------------------------- */
+    long rss = 0L;
+    FILE* fp = NULL;
+    if ((fp = fopen("/proc/self/statm", "r")) == NULL)
+        return (size_t)0L; /* Can't open? */
+    if (fscanf(fp, "%*s%ld", &rss) != 1) {
+            fclose(fp);
+            return (size_t)0L; /* Can't read? */
+        }
+        fclose(fp);
+            return (size_t)rss * (size_t)sysconf(_SC_PAGESIZE);
+}
+
 class ColumnReaderImpl : public ColumnReader {
  public:
   virtual Status GetDefLevels(const int16_t** data, int64_t* length) = 0;
@@ -106,8 +121,14 @@ class ColumnReaderImpl : public ColumnReader {
 
   ::arrow::Status NextBatch(int64_t batch_size,
                             std::shared_ptr<::arrow::ChunkedArray>* out) final {
+    ARROW_LOG(WARNING) << "load Batch before" << getCurrentRSS();
+    std::cout << "load Batch before" << getCurrentRSS();
     RETURN_NOT_OK(LoadBatch(batch_size));
+    std::cout << "load Batch after" << getCurrentRSS();
+    ARROW_LOG(WARNING) << "load Batch after" << getCurrentRSS();
     RETURN_NOT_OK(BuildArray(batch_size, out));
+    std::cout << "build array after" << getCurrentRSS();
+    ARROW_LOG(WARNING) << "build array after" << getCurrentRSS();
     for (int x = 0; x < (*out)->num_chunks(); x++) {
       RETURN_NOT_OK((*out)->chunk(x)->Validate());
     }
